@@ -1,1 +1,6 @@
-{{ books | json | uppercase }}
+<div *ngFor="let b of books; odd as o"
+    [ngClass]="{
+      grayBackground: o
+    }">
+  <br-book [book]="b"></br-book>
+</div>
