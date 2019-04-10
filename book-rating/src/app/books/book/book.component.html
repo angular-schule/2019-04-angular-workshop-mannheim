@@ -16,9 +16,9 @@
     <p>
       {{ book.description }}
     </p>
-    <!-- logik im HTML ist pfui! -->
-    <button
-      (click)="book.rating = book.rating + 1"
-      class="btn btn-primary">Klick mich</button>
+
+    <button (click)="doRateDown()" class="btn btn-secondary mr-2">-</button>
+    <button (click)="doRateUp()" class="btn btn-primary mr-2">+</button>
+
   </div>
 </div>
