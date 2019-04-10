@@ -12,7 +12,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA] // *** Shallow Unit Test ***
     }).compileComponents();
   }));
 
