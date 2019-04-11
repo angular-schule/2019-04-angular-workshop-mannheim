@@ -5,7 +5,9 @@
   <br-book [book]="b"></br-book>
 </div> -->
 
-<br-create-book></br-create-book>
+<br-create-book
+  (created)="addBook($event)"
+></br-create-book>
 
 <br-book
   [book]="b"
