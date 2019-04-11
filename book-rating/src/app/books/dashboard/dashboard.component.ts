@@ -1,40 +1,24 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
+import { BookStoreService } from '../shared/book-store.service';
 
 @Component({
   selector: 'br-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   // Vorsicht: hier haben wir einen Bug, sobald wir HTTP einführen
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
 
   books: Book[] = [];
 
-  constructor(private rs: BookRatingService) {
+  constructor(private rs: BookRatingService, private bs: BookStoreService) {
   }
 
   ngOnInit() {
-    this.books = [{
-      isbn: '000',
-      title: 'Angular',
-      description: 'Tolles Buch',
-      rating: 5
-    },
-    {
-      isbn: '111',
-      title: 'AngularJS',
-      description: 'Altes Buch',
-      rating: 3
-    },
-    {
-      isbn: '333',
-      title: 'React',
-      description: 'Nöööö',
-      rating: 1
-    }];
+    this.bs.getAll().subscribe(books => this.books = books);
   }
 
   doRateUp(book: Book) {
