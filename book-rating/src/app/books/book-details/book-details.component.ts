@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, filter, reduce, scan } from 'rxjs/operators';
 import { of, from, Observable } from 'rxjs';
+import { BookStoreService } from '../shared/book-store.service';
 
 @Component({
   selector: 'br-book-details',
@@ -12,46 +13,18 @@ export class BookDetailsComponent implements OnInit {
 
   isbn: string;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private bs: BookStoreService) { }
 
   ngOnInit() {
-    { // this.route.paramMap
-    //   .pipe(
-    //     map(params => params.get('isbn'))
-    //   )
-    //   .subscribe(isbn => this.isbn = isbn);
-    }
-
-    // Observer
-    const observer = {
-      next: b => console.log(b),
-      error: e => console.log('❌ ERROR', e),
-      complete: () => console.log('✅ Completed!')
-    };
-
-    // Observable
-    const myObservable$ = new Observable<number>(subscriber => {
-      subscriber.next(1);
-      subscriber.next(2);
-      subscriber.next(3);
-      subscriber.next(4);
-      subscriber.next(5);
-
-      setTimeout(() => subscriber.complete(), 1000);
-      // setTimeout(() => subscriber.error('😱'), 1000);
-    });
-
-    // Subscription
-    const subscription = myObservable$
+   this.route.paramMap
     .pipe(
-      map(z => z * 10),
-      filter(z => z > 10),
-      scan((acc, value) => acc + value)
+      map(params => params.get('isbn')),
+      map(isbn => this.bs.getSingle(isbn))
     )
-    .subscribe(observer);
+   .subscribe(book$ =>
+      book$.subscribe(book => this.isbn = book.title));
 
-    // unsubscribe
-    setTimeout(() => subscription.unsubscribe(), 3000);
+
 
   }
 
