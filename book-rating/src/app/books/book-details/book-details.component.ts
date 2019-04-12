@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { of, from } from 'rxjs';
+import { map, filter, reduce, scan } from 'rxjs/operators';
+import { of, from, Observable } from 'rxjs';
 
 @Component({
   selector: 'br-book-details',
@@ -25,15 +25,33 @@ export class BookDetailsComponent implements OnInit {
     // Observer
     const observer = {
       next: b => console.log(b),
-      error: e => console.log('❌ ERROR'),
+      error: e => console.log('❌ ERROR', e),
       complete: () => console.log('✅ Completed!')
     };
 
-    // creation functions
-    const subscription = from([1, 2, 3]).subscribe(observer);
+    // Observable
+    const myObservable$ = new Observable<number>(subscriber => {
+      subscriber.next(1);
+      subscriber.next(2);
+      subscriber.next(3);
+      subscriber.next(4);
+      subscriber.next(5);
+
+      setTimeout(() => subscriber.complete(), 1000);
+      // setTimeout(() => subscriber.error('😱'), 1000);
+    });
+
+    // Subscription
+    const subscription = myObservable$
+    .pipe(
+      map(z => z * 10),
+      filter(z => z > 10),
+      scan((acc, value) => acc + value)
+    )
+    .subscribe(observer);
 
     // unsubscribe
-    subscription.unsubscribe();
+    setTimeout(() => subscription.unsubscribe(), 3000);
 
   }
 
