@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, filter, reduce, scan } from 'rxjs/operators';
+import { map, filter, reduce, scan, mergeMap, concatMap, switchMap, share } from 'rxjs/operators';
 import { of, from, Observable } from 'rxjs';
 import { BookStoreService } from '../shared/book-store.service';
+import { Book } from '../shared/book';
 
 @Component({
   selector: 'br-book-details',
@@ -11,21 +12,17 @@ import { BookStoreService } from '../shared/book-store.service';
 })
 export class BookDetailsComponent implements OnInit {
 
-  isbn: string;
+  book$: Observable<Book>;
 
   constructor(private route: ActivatedRoute, private bs: BookStoreService) { }
 
   ngOnInit() {
-   this.route.paramMap
-    .pipe(
-      map(params => params.get('isbn')),
-      map(isbn => this.bs.getSingle(isbn))
-    )
-   .subscribe(book$ =>
-      book$.subscribe(book => this.isbn = book.title));
-
-
-
+    this.book$ = this.route.paramMap
+      .pipe(
+        map(params => params.get('isbn')),
+        switchMap(isbn => this.bs.getSingle(isbn)),
+        share()
+      );
   }
 
 }
