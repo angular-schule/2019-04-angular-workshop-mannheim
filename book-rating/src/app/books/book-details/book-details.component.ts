@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, filter, reduce, scan, mergeMap, concatMap, switchMap, share } from 'rxjs/operators';
+import { map, filter, reduce, scan, mergeMap, concatMap, switchMap, share, catchError } from 'rxjs/operators';
 import { of, from, Observable } from 'rxjs';
 import { BookStoreService } from '../shared/book-store.service';
 import { Book } from '../shared/book';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'br-book-details',
@@ -20,7 +21,13 @@ export class BookDetailsComponent implements OnInit {
     this.book$ = this.route.paramMap
       .pipe(
         map(params => params.get('isbn')),
-        switchMap(isbn => this.bs.getSingle(isbn))
+        switchMap(isbn => this.bs.getSingle(isbn)),
+        catchError((er: HttpErrorResponse) => of({
+          isbn: 'ERROR',
+          title: '',
+          description: er.url + ' konnte nicht aufgerufen werden',
+          rating: 1
+        }))
       );
   }
 }
