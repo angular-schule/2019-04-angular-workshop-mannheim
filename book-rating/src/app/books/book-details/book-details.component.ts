@@ -22,8 +22,15 @@ export class BookDetailsComponent implements OnInit {
     //   .subscribe(isbn => this.isbn = isbn);
     }
 
-    of('A', 'B', 'C').subscribe(b => console.log(b));
-    from(['1', '2', '3']).subscribe(b => console.log(b));
+    // Observer
+    const observer = {
+      next: b => console.log(b),
+      error: e => console.log('❌ ERROR'),
+      complete: () => console.log('✅ Completed!')
+    };
+
+    // creation functions
+    from([1, 2, 3]).subscribe(observer);
 
 
   }
