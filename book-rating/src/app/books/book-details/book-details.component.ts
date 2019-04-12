@@ -30,8 +30,10 @@ export class BookDetailsComponent implements OnInit {
     };
 
     // creation functions
-    from([1, 2, 3]).subscribe(observer);
+    const subscription = from([1, 2, 3]).subscribe(observer);
 
+    // unsubscribe
+    subscription.unsubscribe();
 
   }
 
