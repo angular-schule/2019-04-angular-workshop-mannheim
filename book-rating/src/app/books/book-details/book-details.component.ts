@@ -21,13 +21,13 @@ export class BookDetailsComponent implements OnInit {
     this.book$ = this.route.paramMap
       .pipe(
         map(params => params.get('isbn')),
-        switchMap(isbn => this.bs.getSingle(isbn)),
-        catchError((er: HttpErrorResponse) => of({
-          isbn: 'ERROR',
-          title: '',
-          description: er.url + ' konnte nicht aufgerufen werden',
-          rating: 1
-        }))
+        switchMap(isbn => this.bs.getSingle(isbn)
+          .pipe(catchError((er: HttpErrorResponse) => of({
+            isbn: 'ERROR',
+            title: '',
+            description: er.url + ' konnte nicht aufgerufen werden',
+            rating: 1
+          }))))
       );
   }
 }
