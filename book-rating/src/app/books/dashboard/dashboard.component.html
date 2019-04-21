@@ -1,19 +1,14 @@
-<!-- <div *ngFor="let b of books; odd as o"
-    [ngClass]="{
-      grayBackground: o
-    }">
-  <br-book [book]="b"></br-book>
-</div> -->
-
 <br-create-book
   (created)="addBook($event)"
 ></br-create-book>
+
+<h3 *ngIf="loading$ | async">Lade Bücher...</h3>
 
 <br-book
   [book]="b"
   (rateUp)="doRateUp($event)"
   (rateDown)="doRateDown($event)"
-  *ngFor="let b of books;"
+  *ngFor="let b of (books$ | async);"
 ></br-book>
 
-Anzahl der Bücher: {{ books.length }}
+Anzahl der Bücher: {{ (books$ | async).length }}

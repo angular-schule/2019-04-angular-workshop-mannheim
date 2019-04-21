@@ -2,44 +2,38 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
 import { BookStoreService } from '../shared/book-store.service';
+import { Store, select } from '@ngrx/store';
+import { State } from 'src/app/reducers';
+import { LoadBooks } from '../actions/book.actions';
+import { getBooksLoading, getAllBooks } from '../selectors/book.selectors';
 
 @Component({
   selector: 'br-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  // Vorsicht: hier haben wir einen Bug, sobald wir HTTP einführen
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
 
-  books: Book[] = [];
+  loading$ = this.store.pipe(select(getBooksLoading));
+  books$ = this.store.pipe(select(getAllBooks));
 
-  constructor(private rs: BookRatingService, private bs: BookStoreService) {
+  constructor(private store: Store<State>) {
   }
 
   ngOnInit() {
-    this.bs.getAll().subscribe(books => this.books = books);
+
   }
 
   doRateUp(book: Book) {
-    const ratedBook = this.rs.rateUp(book);
-    // const ratedBook = {...book};
-    // book.rating++;
-    this.updateAndSortList(ratedBook);
+    // TODO: redux
   }
 
   doRateDown(book: Book) {
-    const ratedBook = this.rs.rateDown(book);
-    this.updateAndSortList(ratedBook);
-  }
-
-  updateAndSortList(ratedBook: Book) {
-    this.books = this.books
-      .map(b => b.isbn === ratedBook.isbn ? ratedBook : b)
-      .sort((a, b) => b.rating - a.rating);
+    // TODO: redux
   }
 
   addBook(newBook: Book) {
-    this.books = [...this.books, newBook];
+    // TODO: redux
   }
 }
